@@ -16,13 +16,23 @@
     <div style="margin-top: 20px;">
       <span>Count: {{ count }}</span>
     </div>
-
+    <!-- @vueuse/core -->
+    <div style="margin-top: 20px;">
+      <el-button type="primary" @click="handleChangeStorageCount">Change Store Count</el-button>
+      <p>X: {{ x }}</p>
+      <p>Y: {{ y }}</p>
+      <p>Is Dark: {{ isDark }}</p>
+      <p>Name: {{ Storage.name }}</p>
+      <p>Color: {{ Storage.color }}</p>
+      <p>Count: {{ Storage.count }}</p>
+    </div>
   </div>
 </template>
 
 <script setup>
 import { ref } from 'vue'
 import Toast from '../components/Toast'
+import { useLocalStorage, useMouse, usePreferredDark } from '@vueuse/core'
 
 const showToast = () => {
   Toast('Hello World')
@@ -71,6 +81,29 @@ function useCounter(initial = 0) {
 }
 
 const { count, increment, decrement, reset } = useCounter()
+
+
+// tracks mouse position
+const { x, y } = useMouse()
+
+// is user prefers dark theme
+const isDark = usePreferredDark()
+
+// persist state in localStorage
+const Storage = useLocalStorage(
+  'my-storage',
+  {
+    name: 'Apple',
+    color: 'red',
+    count: 0,
+  },
+)
+
+console.log(Storage)
+
+function handleChangeStorageCount() {
+  Storage.value.count++
+}
 
 </script>
 
